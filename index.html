@@ -1,0 +1,545 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+	 <!-- bootstrap -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+	<!-- jquery -->
+    	  <script type="text/javascript" src="./js/jquery-2.1.4.min.js"></script>
+		  <script type="text/javascript" src="./js/jquery-ui-1.10.4.custom.min.js"></script>
+          <script type="text/javascript" src="./js/jquery.number.min.js"></script>
+		  
+		 
+    <title>Formulario Crear Empleado</title>
+    
+    <meta name="viewport" content="width=device-width, user-scalable= no, initial-scale=1.0, maximum-scale=1.0, minimun-scale=1.0 ">
+    <link rel="stylesheet" href="css/estilos.css">
+	
+    <script>
+	// CONSULTA TABLA ROL
+	var tiposroles;
+	$.ajax({
+
+		    type: 'POST',
+		    url: 'http://localhost/prueba_usuarios/formulario/registrar.php',
+		    dataType : 'json',
+		    data: {
+		    		modo:'consultarrol'
+		    	  },
+		    success: function(data){ 
+            
+		    	console.log(data);
+				tiposroles = data;
+		    	
+				  $("#rol1").html("");  
+					  for(var i=0; i<data.length; i++){ 
+						var tr = "<tr><label><td><input type='checkbox' id='roll"+data[i].id+"'>"+data[i].nombre+"</td></label></tr>";
+						$("#rol1").append(tr)
+						
+						console.log(tr);
+					  }
+					  
+					
+
+		    },
+		    error: function(){
+		    	var objeto= {Respuesta:"Error Uno"};
+		    	console.log(objeto);
+		    }
+	});
+
+	
+	
+	// CONSULTA TABLA EMPLEADO
+	$.ajax({
+
+		    type: 'POST',
+		    url: 'http://localhost/prueba_usuarios/formulario/registrar.php',
+		    dataType : 'json',
+		    data: {
+		    		modo:'consultar'
+		    	  },
+		    success: function(data){ 
+            
+		    	console.log(data);
+		    	//document.documentosr.temp_solicitud2.value = parseInt(data.result2);
+				  $("#cuerpo").html("");  
+					  for(var i=0; i<data.length; i++){ 
+						var tr = "<tr> <td>"+data[i].nombre+"</td>"+"<td>"+data[i].email+"</td>"+"<td>"+data[i].sexo+"</td>"+"<td>"+data[i].area+"</td>"+"<td>"+data[i].boletin+"</td>"+"<td><input type='button'  class='btn btn-success btn-lg' value='Editar' onclick='seleccionar("+data[i].id+")'></input></td>"+"<td><input type='button' class='btn btn-success btn-lg' value='Eliminar' onclick='eliminar("+data[i].id+")'></input></td></a></td></tr>";
+						$("#cuerpo").append(tr)
+						
+						console.log(tr);
+					  }
+					  
+					//})
+
+		    },
+		    error: function(){
+		    	var objeto= {Respuesta:"Error Dos"};
+		    	console.log(objeto);
+		    }
+	});
+	
+	// CONSULTA TABLA AREAS 
+
+	$.ajax({
+
+		    type: 'POST',
+		    url: 'http://localhost/prueba_usuarios/formulario/registrar.php',
+		    dataType : 'json',
+		    data: {
+		    		modo:'consultarareas'
+		    	  },
+		    success: function(data4){
+			
+			$("#areasempleado").html("");
+                        $.each(data4,
+                        function(key, val) {
+							$("#areasempleado").append('<option value="' + val.id + '">'+val.nombre+'</option>');})
+
+
+		    },
+		    error: function(){
+		    	var objeto= {Respuesta:"Error CINCO"};
+		    	console.log(objeto);
+		    }
+	});
+	
+	//CREAR EMPLEADO	
+    function crearempleado(){	
+		
+				idmod=document.getElementById("idmod").value;
+				nombre=document.getElementById("nombre").value;
+				correo=document.getElementById("correo").value;
+				
+				sexo2="";
+				if (document.getElementById('r1').checked) {
+					  sexo2 = document.getElementById('r1').value;
+					}else if(document.getElementById('r2').checked){
+						sexo2 = document.getElementById('r2').value;
+					}
+				
+				area=document.getElementById("areasempleado").value;
+				observacion=document.getElementById("observacion").value;
+				
+				boletin="";
+				if (document.getElementById('boletin').checked) {
+					  boletin = document.getElementById('boletin').value;
+				}else{
+					boletin = 0;
+				}
+				
+				
+					if(nombre == ""){
+						alert('El campo Nombre es obligatorio');
+						return;
+					}else{
+						if(correo == ""){
+							alert('El campo correo es obligatorio');
+							return;
+						}else{	
+							if(sexo2 == ""){
+									alert('El campo sexo es obligatorio');
+									return;
+							}else{
+								if(area == ""){
+										alert('El campo area es obligatorio');
+										return;
+								}else{
+									if(observacion == ""){
+											alert('El campo Descripción es obligatorio');
+											return;
+									}
+								}
+							}
+						}
+					}
+		
+			if(idmod == "" ){	
+				//ajax para insertar nuevo empleado
+				$.ajax({
+
+							type: 'POST',
+							url: 'http://localhost/prueba_usuarios/formulario/registrar.php',
+							
+							dataType : 'json',
+							data: {
+									modo:'insertar',
+									nombre : nombre,
+									correo : correo,
+									sexo2 : sexo2,
+									area : area,
+									observacion : observacion,
+									boletin : boletin
+								  },
+								  
+							success: function(data){
+							
+								//console.log(data);
+								//insertar roles empleado
+									  $("input:checkbox:checked").each(   
+											function() {
+												console.log($(this)[0].id);
+												//alert("El checkbox con valor " + $(this).val() + " está seleccionado");
+												
+												$.ajax({
+
+														type: 'POST',
+														url: 'http://localhost/prueba_usuarios/formulario/registrar.php',
+														dataType : 'json',
+														data: {
+																modo:'insertarrol',
+																id: $(this)[0].id
+															  },
+														success: function(data){ 
+														
+															
+														},
+														error: function(){
+															var objeto= {Respuesta:"Error Cuatro"};
+															console.log(objeto);
+														}
+												});
+												
+											}
+										);
+									
+									if(data.message == "Guardado"){
+										alert('Se Creo Empleado con exito.');
+										
+										location.reload();
+										document.getElementById("formulario").reset();
+										//setTimeout(function(){window.close(); },2000);
+										
+									}
+							
+								
+								//document.documentosr.temp_solicitud2.value = parseInt(data.result2);
+
+							},
+								error: function(){
+									var objeto= {Respuesta:"Error al ejecutar"};
+									console.log(objeto);
+							}
+							
+				});  // fin ajax insertar nuevo empleado
+				
+			}else{
+			//ajax para editar empleado
+				$.ajax({
+
+							type: 'POST',
+							url: 'http://localhost/prueba_usuarios/formulario/registrar.php',
+							
+							dataType : 'json',
+							data: {
+									modo:'editar',
+									idmod : idmod,
+									nombre : nombre,
+									correo : correo,
+									sexo2 : sexo2,
+									area : area,
+									observacion : observacion,
+									boletin : boletin
+								  },
+								  
+							success: function(data){
+							
+								//console.log(data);
+								//insertar roles empleado
+									  $("input:checkbox:checked").each(   
+											function() {
+												console.log($(this)[0].id);
+																								
+												$.ajax({
+
+														type: 'POST',
+														url: 'http://localhost/prueba_usuarios/formulario/registrar.php',
+														dataType : 'json',
+														data: {
+																modo:'editarrol',
+																idmod : idmod,
+																id: $(this)[0].id
+															  },
+														success: function(data){ 
+														
+															
+														},
+														error: function(){
+															var objeto= {Respuesta:"Error Cuatro"};
+															console.log(objeto);
+														}
+												});
+												
+											}
+										);
+									
+									if(data.message == "Guardado"){
+										alert('Se Modifico Empleado con exito.');
+										
+										location.reload();
+										document.getElementById("formulario").reset();
+										//setTimeout(function(){window.close(); },2000);
+										
+									}
+
+							},
+								error: function(){
+									var objeto= {Respuesta:"Error al ejecutar"};
+									console.log(objeto);
+							}
+							
+				});  // fin ajax editar empleado		
+			
+			}
+	}
+	
+	var rolcontrol="";
+	function seleccionar(id){
+		//console.log(id);		
+		//limpiar roles
+		document.getElementById("formulario").reset();	
+		$.ajax({
+						type: 'POST',
+							url: 'http://localhost/prueba_usuarios/formulario/registrar.php',
+							
+							dataType : 'json',
+							data: {
+									modo:'seleccionar',
+									id : id
+								  },
+								  
+							success: function(data){
+							
+								rolcontrol = '1';
+								//console.log(rolcontrol);
+							
+								console.log(data);
+								document.getElementById('idmod').value = data[0].id;
+								document.getElementById('nombre').value = data[0].nombre;
+								document.getElementById('correo').value = data[0].email;
+								document.getElementById('observacion').value = data[0].descripcion;
+								
+								if(data[0].sexo == 'M'){
+									var r1 = true;
+									var r2 = false;
+									
+								}else{
+									var r1 = false;
+									var r2 = true;
+								}
+								
+								document.getElementById('r1').checked = r1;
+								document.getElementById('r2').checked = r2;
+								
+								document.getElementById('areasempleado').value = data[0].area_id;
+								
+								if(data[0].boletin == '1'){
+									var boletin = true;
+									
+								}else{
+									var boletin = false;
+								}
+								 
+								document.getElementById('boletin').checked = boletin;
+																										
+								
+								//ejecutar otro ajax de rol
+								//consulta del rol del empleado			
+										$.ajax({
+												type: 'POST',
+													url: 'http://localhost/prueba_usuarios/formulario/registrar.php',
+													
+													dataType : 'json',
+													data: {
+															modo:'seleccionarrol',
+															id : id
+														  },
+														  
+														  
+													success: function(data){ 
+
+																console.log(data);
+																for(var i=0; i<data.length; i++){ 
+																	//var tr = "<tr> <td>"+tiposroles[i].nombre+"</td></tr>";
+																	console.log(data[i].nombre);
+																	console.log("roll"+data[i].id);
+																	document.getElementById("roll"+data[i].id).checked = true;
+																
+																}
+						
+													
+															if(data.message == "Guardado"){
+																//document.getElementById("control").value = 1;
+																document.getElementById("formulario").reset();
+																//setTimeout(function(){window.close(); },2000);
+																
+															}
+													
+														
+														//document.documentosr.temp_solicitud2.value = parseInt(data.result2);
+
+													},
+														error: function(){
+															var objeto= {Respuesta:"Error al ejecutar"};
+															console.log(objeto);
+													}
+										});
+
+								
+									if(data.message == "Guardado"){
+										//document.getElementById("control").value = 1;
+										document.getElementById("formulario").reset();
+										//setTimeout(function(){window.close(); },2000);
+										
+									}
+									
+								//document.documentosr.temp_solicitud2.value = parseInt(data.result2);
+
+							},
+								error: function(){
+									var objeto= {Respuesta:"Error al ejecutar"};
+									console.log(objeto);
+							}
+		
+		});
+				
+	}
+		
+	
+// Funcion eliminar empleado
+	function eliminar(id){
+		//console.log(id);
+		var opcion = confirm("Desea Eliminar el Empleado seleccionado ?.");
+		if (opcion == true) {
+				$.ajax({
+								type: 'POST',
+									url: 'http://localhost/prueba_usuarios/formulario/registrar.php',
+									
+									dataType : 'json',
+									data: {
+											modo:'eliminar',
+											id : id
+										  },
+										  
+									success: function(data){
+									
+										if(data.message == "eliminado"){
+												alert('Se Elimino empleado con exito.');
+												location.reload();
+												document.getElementById("formulario").reset();
+												
+												
+										}
+									
+									},
+										error: function(){
+											var objeto= {Respuesta:"Error al ejecutar"};
+											console.log(objeto);
+									}
+				
+				
+				});
+		}
+		
+	}
+	
+	
+	function limpiarform() {
+      	location.reload();
+		document.getElementById("formulario").reset();
+    }
+	
+	function cerrar() {
+      	 window.close();
+    }	 
+
+    </script>
+</head>
+
+<body>
+
+    <div class="contenedor">
+		<!--<form onsubmit="setTimeout('document.forms[0].reset()', 2000)" class="form">-->
+        <form id="formulario" class="form">
+            <div class="form-header">
+                <h1 class="form-title">C<span>rear</span><h1 class="form-title">E<span>mpleado</span></h1></h1>
+            </div>
+            <label for="nombre" class="form-label">Nombre Completo:</label>
+            <input type="text" name="nombre2" id="nombre" class="form-input" placeholder="Escriba su Nombre">
+
+            <label for="correo" class="form-label">Correo Electronico:</label>
+            <input type="email" name="correo2" id="correo" class="form-input" placeholder="Escriba su Email">
+			
+			<label for="sexo2" class="form-label">Sexo: 
+								<div id="rates">
+					  <input type="radio" id="r1" name="rate" value="M"> Masculino
+					  <input type="radio" id="r2" name="rate" value="F"> Femenino
+			</label>
+					  
+  
+	</div>
+	<br>
+			<div class="form-group"> 
+				<label for=" areasempleado'">Areas Empleado</label> 
+				<select class="form-control " id="areasempleado"></select> 
+			</div>
+	
+		 
+	<br>
+            <label for="observacion" class="form-label">Descripción:</label>
+            <textarea name="observacion2" id="observacion" class="form-textarea"  placeholder="Escriba su Mensaje"></textarea>
+
+			
+			<label for="boletin" class="form-label"><input type="checkbox" id="boletin" value="1">   Deseo recibir boletin informativo</label>
+			
+			<br>
+				<table class="form-label">
+			  <thead>
+				<label for=" nombrerol'">Nombre del Rol</label> 
+					
+				</thead>
+			  <tbody id="rol1">
+			  </tbody>
+			</table> 
+			
+			<br>			
+			
+		   <!--Botones con boostrap-->
+		 <center>
+		   <input type="button"  class="btn btn-success btn-lg" onclick="limpiarform();" value="Nuevo">
+		   <input type="button"  class="btn btn-success btn-lg" onclick="crearempleado();" value="Guardar">
+		 </center>
+		   <br>
+           <input type="hidden"  id="control" >
+           <input type="hidden"  id="idmod" name="idmod" >
+		   <br>     
+			<!-- Tabla de empleados creados -->			
+			<table style="width:700px" bgcolor="White" border="2">
+			  <thead>
+				<th>Nombre</th></h1>
+				<th>Email</th>
+				<th>Sexo</th>
+				<th>Area</th>
+				<th>Boletin</th>
+				<th></th>
+				<th></th>
+				</thead>
+			  <tbody id="cuerpo">
+			  </tbody>
+			</table> 
+
+        </form>
+       <? php
+
+		include("registrar.php");
+
+		?>
+    </div>
+    
+           
+</body>
+</html>
