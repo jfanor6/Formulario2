@@ -1,0 +1,14 @@
+﻿//instalador
+//para hacer funcionar este formulario riemro cree las tablas en el archivo 
+// base_datos.sql
+//una vez creada la base de datos cambiar el archivo de conexion con_db.php
+//cambiar los datos en las siguientes variables:
+
+
+	define("HOSTNAME", "localhost");
+	define("DATABASE", "prueba_tecnica_dev");      
+	define("USERNAME", "root");    
+	define("PASSWORD", ""); 
+	
+//cualquier duda, comunicarse al correo : jfanor6@gmail.com
+
